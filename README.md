@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+[![Tests](../../actions/workflows/tests.yml/badge.svg)](../../actions/workflows/tests.yml)
 
 **Invisible Physics** is an open-source scientific computing and interactive visualization laboratory exploring electromagnetic phenomena through vectorized NumPy computation, analytical special functions, and publication-grade Matplotlib graphics.
 
