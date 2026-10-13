@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "Invisible Physics: An Interactive Physics Visualization Laboratory"
+message: "If you use this software in teaching or research, please cite it using the metadata below."
+type: software
+authors:
+  - name: "Invisible Physics Contributors"
+version: 0.1.0
+date-released: "2026-10-13"
+license: MIT
+keywords:
+  - physics
+  - electrostatics
+  - magnetism
+  - electromagnetic-waves
+  - scientific-visualization
+  - python
+  - jupyter
+
