@@ -1,0 +1,4 @@
+# Exclude notebook output data and standalone HTML bundle from language statistics
+*.ipynb linguist-detectable=false
+interactive_3d_lab.html linguist-documentation=true
+
