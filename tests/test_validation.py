@@ -70,6 +70,26 @@ def test_find_collinear_zero_field_point_same_and_opposite_signs() -> None:
         find_collinear_zero_field_point(1.0, -1.0, -1.0, 1.0)
 
 
+@pytest.mark.parametrize(
+    ("q1_uc", "q2_uc"),
+    [
+        (1.0, 400.0),  # like charges: null within 5% of the weaker charge
+        (1.0, 1.0e4),
+        (-1.0, -1.0e4),
+        (1.0e4, 1.0),  # weaker charge on the right
+        (-1.0, 1.0e7),  # opposite charges: null within 1e-3 m of the weaker charge
+        (1.0e7, -1.0),
+    ],
+)
+def test_find_collinear_zero_field_point_for_lopsided_charges(q1_uc: float, q2_uc: float) -> None:
+    """
+    The null point of a lopsided pair sits very close to the weaker charge. The root
+    search must still bracket it: x_numerical has to agree with the analytical value.
+    """
+    res = find_collinear_zero_field_point(q1_uc, 0.0, q2_uc, 1.0)
+    assert math.isclose(res["x_numerical_m"], res["x_analytical_m"], rel_tol=1e-9, abs_tol=1e-12)
+
+
 def test_validate_potential_gradient_consistency_convergence() -> None:
     """
     Verify that increasing grid resolution reduces the median relative error between
