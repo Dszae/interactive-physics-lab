@@ -189,3 +189,24 @@ def test_electrostatics_input_validation() -> None:
     with pytest.raises(ValueError):
         electric_field_2d(np.zeros((5, 5)), np.zeros((5, 5)), [], r_min=-0.1)
 
+
+
+@pytest.mark.parametrize(
+    ("n_points", "shape"),
+    [
+        (np.int64(11), (11, 11)),  # NumPy integers come out of array arithmetic and .size
+        ((np.int32(11), 7), (7, 11)),
+        ([11, 7], (7, 11)),
+        ((11.0, 7.0), (7, 11)),  # whole-number floats are unambiguous
+    ],
+)
+def test_coordinate_grid_accepts_any_integer_resolution(n_points, shape) -> None:
+    X, Y = create_coordinate_grid((-1.0, 1.0), (-1.0, 1.0), n_points=n_points)
+    assert X.shape == shape and Y.shape == shape
+
+
+@pytest.mark.parametrize("n_points", [(11.5, 7), 11.5, True, (11, 7, 5), "11"])
+def test_coordinate_grid_rejects_resolutions_that_are_not_integers(n_points) -> None:
+    # A fractional resolution used to be truncated silently (11.5 -> 11).
+    with pytest.raises(ValueError, match="n_points"):
+        create_coordinate_grid((-1.0, 1.0), (-1.0, 1.0), n_points=n_points)

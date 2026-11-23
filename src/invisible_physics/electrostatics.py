@@ -114,6 +114,19 @@ class ElectricPotentialResult:
     strategy: SingularityStrategy
 
 
+def _is_whole_number(value: object) -> bool:
+    """
+    True for a grid resolution that is unambiguously an integer: a Python or NumPy
+    integer (np.int64 comes out of array arithmetic and .size), or a float with no
+    fractional part. A bool is not a resolution, and 11.5 must not become 11 silently.
+    """
+    if isinstance(value, (bool, np.bool_)):
+        return False
+    if isinstance(value, (int, np.integer)):
+        return True
+    return isinstance(value, (float, np.floating)) and float(value).is_integer()
+
+
 def create_coordinate_grid(
     x_lim: tuple[float, float] = (-2.0, 2.0),
     y_lim: tuple[float, float] = (-2.0, 2.0),
@@ -143,9 +156,9 @@ def create_coordinate_grid(
     if not (np.all(np.isfinite(x_lim)) and np.all(np.isfinite(y_lim))):
         raise ValueError("Grid limits must be finite real numbers.")
 
-    if isinstance(n_points, int):
-        nx = ny = n_points
-    elif isinstance(n_points, tuple) and len(n_points) == 2:
+    if _is_whole_number(n_points):
+        nx = ny = int(n_points)
+    elif isinstance(n_points, (tuple, list)) and len(n_points) == 2 and all(map(_is_whole_number, n_points)):
         nx, ny = int(n_points[0]), int(n_points[1])
     else:
         raise ValueError(f"n_points must be an integer or a 2-tuple of integers; got {n_points}.")
