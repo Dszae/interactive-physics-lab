@@ -85,6 +85,9 @@ def validate_potential_gradient_consistency(
     """
     if r_eval_min <= r_min:
         raise ValueError(f"r_eval_min ({r_eval_min}) must be strictly greater than r_min ({r_min}).")
+    if len(charges) == 0:
+        # With no charges E and grad(V) are zero everywhere: there is nothing to compare.
+        raise ValueError("Gradient consistency needs at least one point charge.")
 
     X, Y = create_coordinate_grid(x_lim=x_lim, y_lim=y_lim, n_points=n_points)
     dx = float(X[0, 1] - X[0, 0])
@@ -103,6 +106,14 @@ def validate_potential_gradient_consistency(
     for c in charges:
         dist = np.hypot(X - c.x, Y - c.y)
         valid_mask &= dist >= r_eval_min
+
+    # Checked before the threshold below: np.max of an empty selection would raise
+    # numpy's "zero-size array" error instead of this explanation.
+    if not np.any(valid_mask):
+        raise ValueError(
+            "No valid grid points remained after applying exclusion mask: "
+            f"r_eval_min ({r_eval_min} m) leaves no point of the grid far enough from the charges."
+        )
 
     # Also exclude very tiny field regions (e.g. exact null points) when computing relative error
     mag_threshold = 1e-3 * float(np.max(field_res.E_mag[valid_mask]))

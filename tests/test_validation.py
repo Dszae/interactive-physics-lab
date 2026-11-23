@@ -70,6 +70,18 @@ def test_find_collinear_zero_field_point_same_and_opposite_signs() -> None:
         find_collinear_zero_field_point(1.0, -1.0, -1.0, 1.0)
 
 
+def test_gradient_consistency_explains_an_exclusion_radius_that_covers_the_grid() -> None:
+    # r_eval_min larger than the domain leaves nothing to compare; the check must
+    # say so, not fail inside numpy with "zero-size array to reduction operation".
+    with pytest.raises(ValueError, match="No valid grid points remained"):
+        validate_potential_gradient_consistency(get_preset_charges("dipole"), r_eval_min=10.0)
+
+
+def test_gradient_consistency_requires_a_charge() -> None:
+    with pytest.raises(ValueError, match="at least one point charge"):
+        validate_potential_gradient_consistency([])
+
+
 @pytest.mark.parametrize(
     ("q1_uc", "q2_uc"),
     [
