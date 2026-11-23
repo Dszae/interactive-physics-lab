@@ -211,19 +211,26 @@ def find_collinear_zero_field_point(
         )
         return float(res.Ex[0])
 
+    # The null point of a lopsided pair sits very close to the weaker charge (within
+    # 5% of the gap for like charges at 1:400), so fixed offsets from the charges can
+    # miss it. Each bracket end is placed halfway between a charge and the analytical
+    # null instead: the bracket always holds the null and stays clear of both cores.
     if q1_uc * q2_uc > 0.0:
         x_analytical = (x1_m * s2 + x2_m * s1) / (s1 + s2)
-        eps = 0.05 * (x2_m - x1_m)
-        x_numerical = float(brentq(ex_at_x, x1_m + eps, x2_m - eps, xtol=1e-12))
+        lower = x1_m + 0.5 * (x_analytical - x1_m)
+        upper = x_analytical + 0.5 * (x2_m - x_analytical)
+        x_numerical = float(brentq(ex_at_x, lower, upper, xtol=1e-12))
     else:
         x_analytical = (x2_m * s1 - x1_m * s2) / (s1 - s2)
         span = abs(x_analytical - x1_m) + abs(x2_m - x1_m)
         if abs(q1_uc) < abs(q2_uc):
             # Null point is to the left of x1_m
-            x_numerical = float(brentq(ex_at_x, x_analytical - span, x1_m - 1e-3, xtol=1e-12))
+            upper = x1_m - 0.5 * (x1_m - x_analytical)
+            x_numerical = float(brentq(ex_at_x, x_analytical - span, upper, xtol=1e-12))
         else:
             # Null point is to the right of x2_m
-            x_numerical = float(brentq(ex_at_x, x2_m + 1e-3, x_analytical + span, xtol=1e-12))
+            lower = x2_m + 0.5 * (x_analytical - x2_m)
+            x_numerical = float(brentq(ex_at_x, lower, x_analytical + span, xtol=1e-12))
 
     residual_e = abs(ex_at_x(x_numerical))
     return {
