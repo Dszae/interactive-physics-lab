@@ -3,6 +3,11 @@ title: "Invisible Physics: An Interactive Physics Visualization Laboratory"
 message: "If you use this software in teaching or research, please cite it using the metadata below."
 type: software
 authors:
+  - given-names: "Dipesh"
+    family-names: "Sapkota"
+    alias: "Dszae"
+    affiliation: "IOE Thapathali Campus, Tribhuvan University"
+    website: "https://www.dipeshsapkota7.com.np/"
   - name: "Invisible Physics Contributors"
 version: 0.1.0
 date-released: "2026-10-13"
