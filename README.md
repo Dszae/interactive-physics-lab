@@ -193,3 +193,6 @@ If you use **Invisible Physics** in coursework, educational materials, or scient
 
 Released under the [MIT License](LICENSE).
 
+## Author
+
+Built by **Dipesh Sapkota** ([@Dszae](https://github.com/Dszae)), a Computer Engineering student at IOE Thapathali Campus, Kathmandu, Nepal. More projects at [dipeshsapkota7.com.np](https://www.dipeshsapkota7.com.np/).
